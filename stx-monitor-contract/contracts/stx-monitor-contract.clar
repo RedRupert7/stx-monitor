@@ -1,4 +1,4 @@
-;; stx-monitor.clar
+;; stx-monitor.contract
 (define-constant contract-owner tx-sender)
 (define-data-var last-price uint u0)
 
@@ -10,3 +10,16 @@
 
 (define-read-only (get-last-price)
   (ok (var-get last-price)))
+  ;; Added functions
+(define-constant PRICE_DECIMALS u6)
+
+(define-private (calculate-price-change (old-price uint) (new-price uint))
+  (let
+    (
+      (price-diff (if (> new-price old-price)
+        (- new-price old-price)
+        (- old-price new-price)))
+      (percentage (* (/ (* price-diff u100) old-price) u1))
+    )
+    percentage
+  ))
