@@ -23,3 +23,20 @@
     )
     percentage
   ))
+  ;; Added subscription functionality
+(define-constant MIN_NOTIFICATION_THRESHOLD u5)
+(define-data-var notification-threshold uint MIN_NOTIFICATION_THRESHOLD)
+
+(define-map user-notifications 
+  { user: principal } 
+  { enabled: bool, threshold: uint })
+
+(define-public (subscribe (threshold uint))
+  (begin
+    (asserts! (>= threshold MIN_NOTIFICATION_THRESHOLD) (err u400))
+    (ok (map-set user-notifications
+      {user: tx-sender}
+      {enabled: true, threshold: threshold}))))
+
+(define-public (unsubscribe)
+  (ok (map-delete user-notifications {user: tx-sender})))
