@@ -40,3 +40,18 @@
 
 (define-public (unsubscribe)
   (ok (map-delete user-notifications {user: tx-sender})))
+  ;; Added notification system
+(define-private (notify-users (new-price uint) (old-price uint) (price-change uint))
+  (begin
+    (if (> price-change (var-get notification-threshold))
+      (begin
+        (print {
+          event: "price-change",
+          old-price: old-price,
+          new-price: new-price,
+          change-percentage: price-change,
+          direction: (if (> new-price old-price) "increased" "decreased")
+        })
+        true)
+      true)
+    true))
