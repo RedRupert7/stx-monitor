@@ -55,3 +55,22 @@
         true)
       true)
     true))
+    ;; Added validation constants and error codes
+(define-constant MIN_PRICE u1)
+(define-constant MAX_PRICE u1000000000)
+(define-constant ERR_UNAUTHORIZED (err u403))
+(define-constant ERR_INVALID_PRICE (err u401))
+(define-constant ERR_INVALID_THRESHOLD (err u402))
+
+;; Updated set-price with validation
+(define-public (set-price (new-price uint))
+  (begin
+    (asserts! (is-eq tx-sender contract-owner) ERR_UNAUTHORIZED)
+    (asserts! (and (>= new-price MIN_PRICE) (<= new-price MAX_PRICE)) ERR_INVALID_PRICE)
+    (let
+      ((old-price (var-get last-price))
+       (validated-price new-price)
+       (price-change (calculate-price-change old-price validated-price)))
+      (var-set last-price validated-price)
+      (notify-users validated-price old-price price-change)
+      (ok true))))
