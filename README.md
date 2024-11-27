@@ -19,8 +19,8 @@ A Clarity smart contract for monitoring STX price movements and notifying users 
 - [Node.js](https://nodejs.org/) (v14 or higher) for running off-chain services
 - Access to a Stacks node (local or network)
 
-## Project Structure
-
+## Final Project Structure
+## Note: still in progress
 ```
 stx-price-monitor/
 ├── contracts/          # Smart contract files
